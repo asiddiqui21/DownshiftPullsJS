@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Downshift Pull Request Table</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Downshift Pull Request Table</h1>
+<canvas id="myChart"></canvas>
+
+<script>
+      const uri = 'http://localhost:3000/api/pull';
+      const headers = new Headers();
+      headers.set('Authorization', `Basic ${btoa(`admin:password`)}`);
+
+      async function getPullData() {
+        try {
+          const response = await fetch(uri, { headers });
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function displayChart() {
+        const chartData = await getPullData();
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+          type: 'bar',
+          data: chartData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+
+      displayChart();
+    </script>
+</body>
+</html>
